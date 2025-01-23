@@ -23,7 +23,6 @@ class TestNotesList(TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.user = User.objects.create_user(username='testuser', password='password')
-        # Создаём 5 заметок для пользователя.
         for i in range(5):
             Note.objects.create(
                 title=f'Заметка {i}',
@@ -34,7 +33,6 @@ class TestNotesList(TestCase):
     def test_notes_list(self):
         self.client.login(username='testuser', password='password')
         response = self.client.get(self.NOTES_LIST_URL)
-        # Проверяем, что на странице отобразится 5 заметок.
         self.assertEqual(len(response.context['object_list']), 5)
 
 
@@ -61,7 +59,6 @@ class TestNoteCreate(TestCase):
         data = {'title': 'Тестовая заметка', 'text': 'Текст заметки', 'slug': 'test-slug'}
         response = self.client.post(self.CREATE_NOTE_URL, data)
         self.assertRedirects(response, reverse('notes:success'))
-        # Проверяем, что заметка была создана
         self.assertEqual(Note.objects.count(), 1)
         self.assertEqual(Note.objects.first().title, 'Тестовая заметка')
 
@@ -118,7 +115,6 @@ class TestNoteDelete(TestCase):
         self.client.login(username='testuser', password='password')
         response = self.client.post(self.delete_url)
         self.assertRedirects(response, reverse('notes:success'))
-        # Проверяем, что заметка была удалена
         self.assertEqual(Note.objects.count(), 0)
 
 

@@ -38,10 +38,16 @@ class TestRoutes(TestCase):
 
         for name, args in urls:
             with self.subTest(name=name):
+                # Проверяем доступность страниц для авторизованного пользователя
                 self.client.force_login(self.author)
                 url = reverse(name, args=args)
                 response = self.client.get(url)
                 self.assertEqual(response.status_code, HTTPStatus.OK)
+
+                # Также проверяем доступность страниц для анонимного пользователя
+                if name == 'notes:home':  # Главная страница
+                    response = self.client.get(reverse(name))
+                    self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_redirect_for_anonymous_client(self):
         # Проверяем, что анонимный пользователь перенаправляется на страницу входа при попытке редактирования или удаления.

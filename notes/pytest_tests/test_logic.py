@@ -56,7 +56,7 @@ def test_not_unique_slug(author_client, note, form_data):
     # Пытаемся создать новую заметку:
     response = author_client.post(url, data=form_data)
     # Проверяем, что в ответе содержится ошибка формы для поля slug:
-    assertFormError(response, 'form', 'slug', errors=(note.slug + WARNING))
+    assertFormError(response, 'form', 'slug', errors=[note.slug + WARNING])
     # Убеждаемся, что количество заметок в базе осталось равным 1:
     assert Note.objects.count() == 1
 
